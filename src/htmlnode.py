@@ -20,12 +20,12 @@ class HTMLNode():
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
     
 class LeafNode(HTMLNode):
-    def __init__(self, tag, value, props):
-        super().__init__(tag, value, props)
+    def __init__(self, tag=None, value=None, props=None):
+        super().__init__(tag, value, None, props)
 
     def to_html(self):
         if self.value is None:
-            raise ValueError("missing value, all LeadNodes must contain value")
+            raise ValueError("missing value, all LeafNodes must contain value")
         if self.tag is None:
             return self.value
-        return f"<{self.tag} {self.props_to_html}>{self.value}</{self.tag}>"
+        return f'<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>'

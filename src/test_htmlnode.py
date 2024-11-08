@@ -42,13 +42,21 @@ class TestTextNode(unittest.TestCase):
             node1.to_html()
     
     def test_leaf(self):
-        node1 = HTMLNode("a", "This is a link", None, {"href": "https://www.google.com", "target": "_blank"})
-        child = LeafNode(node1)
-        self.assertEqual(child, node1.tag)
-        self.assertEqual(child, node1.value)
-        self.assertEqual(child, node1.props)
-        self.assertEqual(child.to_html, "<a href=https://www.google.com>This is a link</a>")
+        child = LeafNode(tag="a", value="This is a link", props={"href": "https://www.google.com"})
+        child2 = LeafNode(None, "This is raw text", None)
+        child3 = LeafNode("p", "This is a paragraph of text")
+        self.assertEqual(child.tag, "a")
+        self.assertEqual(child.value, "This is a link")
+        self.assertEqual(child.props, {"href": "https://www.google.com"})
+        self.assertEqual(child.to_html(), '<a href="https://www.google.com">This is a link</a>')
+        self.assertEqual(child2.to_html(), "This is raw text")
+        self.assertEqual(child3.to_html(), "<p>This is a paragraph of text</p>")
 
+    def test_leaf_raise(self):
+        child = LeafNode(tag="a", props={"href": "https://www.google.com"})
+        print(child)
+        with self.assertRaises(ValueError):
+            child.to_html()
 
 
 if __name__ == "__main__":
