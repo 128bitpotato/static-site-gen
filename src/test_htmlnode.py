@@ -9,15 +9,24 @@ class TestTextNode(unittest.TestCase):
         propos = node.props_to_html()
         self.assertTrue(propos == ' class="main_text" id="intro"')
 
-    def test_props_func2(self):
-        node = HTMLNode("b", "This is a string, cool huh?", None, {"class": "main_text", "id": "intro", "test": "nummer"})
-        propos = node.props_to_html()
-        self.assertTrue(propos == ' class="main_text" id="intro" test="nummer"')
-
-    def test_props_func3(self):
-        node = HTMLNode("b", "This is a string, cool huh?", None, {"class": "main_text", "id": "intro", "test": "nummer", "test2": "kronan"})
+    def test_no_props_func(self):
+        node = HTMLNode("b", "This is a string, cool huh?")
         propos = node.props_to_html()
         self.assertFalse(propos == ' class="main_text" id="intro" test="nummer"')
+
+    def test_values(self):
+        node = HTMLNode("b", "This is a string, cool huh?")
+        node2 = HTMLNode("a", "This is a link", None, {"href": "https://www.google.com", "target": "_blank"})
+
+        self.assertEqual(node.tag, "b")
+        self.assertEqual(node.value, "This is a string, cool huh?")
+        self.assertEqual(node.children, None)
+        self.assertEqual(node.props, None)
+        self.assertEqual(node2.props, {"href": "https://www.google.com", "target": "_blank"})
+        
+    def test_repr(self):
+        node = HTMLNode("a", "This is a link", None, {"href": "https://www.google.com", "target": "_blank"})
+        self.assertEqual(node.__repr__(), "HTMLNode(a, This is a link, children: None, {'href': 'https://www.google.com', 'target': '_blank'})")
 
     def test_many_nodes(self):
         node1 = HTMLNode("p", "This is a string, cool huh?", None, {"class": "main_text", "id": "intro"})

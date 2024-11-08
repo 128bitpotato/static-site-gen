@@ -8,11 +8,13 @@ class HTMLNode():
         self.props = props
 
     def to_html(self):
-        raise NotImplementedError
+        raise NotImplementedError("to_html method not implemented")
     
     def props_to_html(self):
+        if self.props is None:
+            return ""
         list_of_strings = list(map(lambda item: f'{item[0]}="{item[1]}"', self.props.items()))
         return " " + " ".join(list_of_strings)
     
     def __repr__(self):
-        return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props}"
+        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
