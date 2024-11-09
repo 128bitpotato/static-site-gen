@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -53,10 +53,16 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(child3.to_html(), "<p>This is a paragraph of text</p>")
 
     def test_leaf_raise(self):
-        child = LeafNode(tag="a", props={"href": "https://www.google.com"})
-        print(child)
+        child = LeafNode(tag="a", value=None, props={"href": "https://www.google.com"})
         with self.assertRaises(ValueError):
             child.to_html()
+
+    def test_parent_node(self):
+        parent = ParentNode(tag="p", children=[LeafNode("b", "Bold text"),
+                                  LeafNode(None, "Normal text"),
+                                  LeafNode("i", "italic text"),
+                                  LeafNode(None, "Normal text")])
+        self.assertEqual(parent.to_html(), "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>")
 
 
 if __name__ == "__main__":
