@@ -58,12 +58,46 @@ class TestTextNode(unittest.TestCase):
             child.to_html()
 
     def test_parent_node(self):
-        parent = ParentNode(tag="p", children=[LeafNode("b", "Bold text"),
+        leaf_children = ParentNode(tag="p", children=[LeafNode("b", "Bold text"),
                                   LeafNode(None, "Normal text"),
                                   LeafNode("i", "italic text"),
                                   LeafNode(None, "Normal text")])
-        self.assertEqual(parent.to_html(), "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>")
+        
+        mixed_children = ParentNode(tag="p", children=[ParentNode("p", children=[LeafNode("i", "italic text"),
+                                                          LeafNode(None, "Normal text")]),
+                                    LeafNode("b", "Bold text"),
+                                    LeafNode("i", "italic text"),
+                                    LeafNode(None, "Normal text")])
+        
+        multi_children = ParentNode(tag="p", children=[ParentNode("p", children=[LeafNode("i", "italic text"),
+                                                          LeafNode(None, "Normal text"), ParentNode("b", children=[LeafNode("b", "Bold text"),
+                                  LeafNode(None, "Normal text"),
+                                  LeafNode("i", "italic text"),
+                                  LeafNode(None, "Normal text")])]),
+                                    LeafNode("b", "Bold text"),
+                                    LeafNode("i", "italic text"),
+                                    LeafNode(None, "Normal text"),
+                                    LeafNode("a", "This is a link", {"href": "https://www.google.com"})])
+        
+        parent_props = ParentNode("p", [LeafNode("b", "Bold text"),
+                                  LeafNode(None, "Normal text")],
+                                  {"type": "big", "color": "red"})
 
+        self.assertEqual(leaf_children.to_html(), "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>")
+        self.assertEqual(mixed_children.to_html(), "<p><p><i>italic text</i>Normal text</p><b>Bold text</b><i>italic text</i>Normal text</p>")
+        self.assertTrue(multi_children.to_html(), str)
+        self.assertEqual(parent_props.to_html(), '<p type="big" color="red"><b>Bold text</b>Normal text</p>')
+
+    def test_parent_raise(self):
+        no_children = ParentNode("p", children=None)
+        no_tag = ParentNode(tag=None, children=[LeafNode("b", "Bold text"),
+                                  LeafNode(None, "Normal text"),
+                                  LeafNode("i", "italic text"),
+                                  LeafNode(None, "Normal text")])
+        with self.assertRaises(ValueError):
+            no_children.to_html()
+        with self.assertRaises(ValueError):
+            no_tag.to_html()
 
 if __name__ == "__main__":
     unittest.main

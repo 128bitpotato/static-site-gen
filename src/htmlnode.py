@@ -44,10 +44,6 @@ class ParentNode(HTMLNode):
             html_string += child.to_html()
         return f'<{self.tag}{self.props_to_html()}>{html_string}</{self.tag}>'
 
-        
-        # if len(index_so_far) < len(self.children):
-        #    string += self.children[index_so_far].to_html()
-        #    self.to_html(index_so_far + 1, string)
-        # return f'<{self.tag}{self.props_to_html()}>{string}</{self.tag}>'
+
 
     
