@@ -1,5 +1,8 @@
 from textnode import *
 
+delimiters = {"**": TextType.BOLD,
+              "*": TextType.ITALIC}
+
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     list_of_nodes = []
     for node in old_nodes:
