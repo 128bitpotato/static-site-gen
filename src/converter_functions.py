@@ -6,6 +6,13 @@ delimiters = {"**": TextType.BOLD,
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     list_of_nodes = []
     for node in old_nodes:
+        if node.text.find(delimiter) == -1:
+            if node.text_type == TextType.TEXT:
+                list_of_nodes.append(node)
+                continue
+            else:
+                raise ValueError("old_node missing delimiter correlating to text_type")
+            
         sections = node.text.split(delimiter)
         if len(sections) % 2 == 0:
             raise ValueError("delimiter not closed, invalid number of sections")
