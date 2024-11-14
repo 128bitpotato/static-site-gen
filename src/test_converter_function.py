@@ -44,22 +44,22 @@ class TestConverterFunc(unittest.TestCase):
         bold_italic = TextNode("This is a **bold word** and this is *an italic* word", TextType.TEXT)
         italic_code = TextNode("This is an *italic word* and this is a `code block` after it", TextType.TEXT)
         code_bold = TextNode("This is a `code block` and this is a **bold word** after it", TextType.TEXT)
-        bold_italic_code = TextNode("This is a **bold word.** This is an *italic word.* And this is a `code block`.")
+        bold_italic_code = TextNode("This is a **bold word.** This is an *italic word.* And this is a `code block`.", TextType.TEXT)
         
         new_bold = split_nodes_delimiter([bold], "**", TextType.BOLD)
         new_italic = split_nodes_delimiter([italic], "*", TextType.ITALIC)
         new_code = split_nodes_delimiter([code], "`", TextType.CODE)
 
-        new_bold_italic = split_nodes_delimiter(bold_italic, "*", TextType.ITALIC)
+        new_bold_italic = split_nodes_delimiter([bold_italic], "*", TextType.ITALIC)
         new_bold_italic = split_nodes_delimiter(new_bold_italic, "**", TextType.BOLD)
 
-        new_italic_code = split_nodes_delimiter(italic_code, "*", TextType.ITALIC)
+        new_italic_code = split_nodes_delimiter([italic_code], "*", TextType.ITALIC)
         new_italic_code = split_nodes_delimiter(new_italic_code, "`", TextType.CODE)
 
-        new_code_bold = split_nodes_delimiter(code_bold, "`", TextType.CODE)
+        new_code_bold = split_nodes_delimiter([code_bold], "`", TextType.CODE)
         new_code_bold = split_nodes_delimiter(new_code_bold, "**", TextType.BOLD)
 
-        new_bold_italic_code = split_nodes_delimiter(bold_italic_code, "**", TextType.BOLD)
+        new_bold_italic_code = split_nodes_delimiter([bold_italic_code], "**", TextType.BOLD)
         new_bold_italic_code = split_nodes_delimiter(new_bold_italic_code, "*", TextType.ITALIC)
         new_bold_italic_code = split_nodes_delimiter(new_bold_italic_code, "`", TextType.CODE)
 
