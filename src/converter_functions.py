@@ -1,3 +1,4 @@
+import re
 from textnode import *
 
 delimiters = {"**": TextType.BOLD,
@@ -12,7 +13,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if node.text.find(delimiter) == -1:
             list_of_nodes.append(node)
             continue
-        
+
         sections = node.text.split(delimiter)
         if len(sections) % 2 == 0:
             raise ValueError("delimiter not closed, invalid number of sections")
@@ -28,4 +29,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         list_of_nodes.extend(new_nodes)
 
     return list_of_nodes
-        
+
+
+def extract_markdown_images(text):
+    alt_text = re.findall(r"!\[(.*?)\]", text)
+    url = re.findall(r"\((https?:.*?)\)", text)
+    extracted_images = list(map(lambda alt_text, url: (alt_text, url), alt_text, url))
+    return extracted_images
+
+def extract_markdown_links(text):
+    pass
