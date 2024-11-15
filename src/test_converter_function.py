@@ -129,5 +129,11 @@ class TestConverterFunc(unittest.TestCase):
             ], new_bold_italic_code
         )
         
+    def test_faulty_nodes(self):
+        missing_string = TextNode("", TextType.TEXT)
+
+        test_missing_string = split_nodes_delimiter([missing_string], "*", TextType.ITALIC)
+
+        print(f"PRINT: {test_missing_string}")
 
         

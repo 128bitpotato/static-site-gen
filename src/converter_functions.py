@@ -9,7 +9,10 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if node.text_type != TextType.TEXT:
             list_of_nodes.append(node)
             continue
-            
+        if node.text.find(delimiter) == -1:
+            list_of_nodes.append(node)
+            continue
+        
         sections = node.text.split(delimiter)
         if len(sections) % 2 == 0:
             raise ValueError("delimiter not closed, invalid number of sections")
