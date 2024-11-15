@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from converter_functions import split_nodes_delimiter
+from converter_functions import split_nodes_delimiter, extract_markdown_images
 
 
 class TestConverterFunc(unittest.TestCase):
@@ -128,3 +128,10 @@ class TestConverterFunc(unittest.TestCase):
                 TextNode(".", TextType.TEXT) 
             ], new_bold_italic_code
         )
+
+    def test_image_extractor(self):
+        text1 = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+
+        text1_test = extract_markdown_images(text1)
+
+        self.assertEqual(text1_test, [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
