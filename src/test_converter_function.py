@@ -131,7 +131,13 @@ class TestConverterFunc(unittest.TestCase):
 
     def test_image_extractor(self):
         text1 = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text2 = "Here is another ![test image](https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg)"
+        no_link = "Here is a failen ![image without link]() and then nothing"
 
         text1_test = extract_markdown_images(text1)
+        text2_test = extract_markdown_images(text2)
+        no_link_test = extract_markdown_images(no_link)
+        print(f"PRINT: {no_link_test}")
 
         self.assertEqual(text1_test, [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+        self.assertEqual(text2_test, [("test image", "https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg")])

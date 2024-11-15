@@ -34,6 +34,8 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 def extract_markdown_images(text):
     alt_text = re.findall(r"!\[(.*?)\]", text)
     url = re.findall(r"\((https?:.*?)\)", text)
+    if len(url) < len(alt_text):
+        raise ValueError("Missing URL")
     extracted_images = list(map(lambda alt_text, url: (alt_text, url), alt_text, url))
     return extracted_images
 
