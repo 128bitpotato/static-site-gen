@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from converter_functions import split_nodes_delimiter, extract_markdown_images
+from converter_functions import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 
 
 class TestConverterFunc(unittest.TestCase):
@@ -132,12 +132,36 @@ class TestConverterFunc(unittest.TestCase):
     def test_image_extractor(self):
         text1 = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
         text2 = "Here is another ![test image](https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg)"
-        no_link = "Here is a failen ![image without link]() and then nothing"
+        no_link = "Here is a failed ![image without link]() and then ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        no_alt = "This is text with a ![](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
 
         text1_test = extract_markdown_images(text1)
         text2_test = extract_markdown_images(text2)
-        no_link_test = extract_markdown_images(no_link)
-        print(f"PRINT: {no_link_test}")
+        no_alt_test = extract_markdown_images(no_alt)
 
         self.assertEqual(text1_test, [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
         self.assertEqual(text2_test, [("test image", "https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg")])
+        self.assertEqual(no_alt_test, [("", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+
+        with self.assertRaises(ValueError):
+            extract_markdown_images(no_link)
+
+    def test_link_extractor(self):
+        text1 = "This is text with a [rick roll](https://i.imgur.com/aKaOqIh.gif) and [obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text2 = "Here is another [test link](https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg)"
+        no_link = "Here is a failed [image without link]() and then [obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        no_alt = "This is text with a [](https://i.imgur.com/aKaOqIh.gif) and [obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        image = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and [obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+
+        text1_test = extract_markdown_links(text1)
+        text2_test = extract_markdown_links(text2)
+        no_alt_test = extract_markdown_links(no_alt)
+        image_test = extract_markdown_links(image)
+
+        self.assertEqual(text1_test, [("rick roll", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+        self.assertEqual(text2_test, [("test link", "https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg")])
+        self.assertEqual(no_alt_test, [("", "https://i.imgur.com/aKaOqIh.gif"), ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+        self.assertEqual(image_test, [("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")])
+
+        with self.assertRaises(ValueError):
+            extract_markdown_links(no_link)
