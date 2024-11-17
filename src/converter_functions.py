@@ -58,3 +58,15 @@ def extract_markdown_links(text):
         extracted_images.append((alt, url))
 
     return extracted_images
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        new_strings = extract_markdown_images(old_node.text)
+        new_node = list(map(lambda tuple: TextNode(tuple[0], TextType.IMAGE, tuple[1]), new_strings))
+
+def split_nodes_link(old_nodes):
+    pass
