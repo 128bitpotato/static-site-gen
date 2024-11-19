@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from converter_functions import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from converter_functions import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link
 
 
 class TestConverterFunc(unittest.TestCase):
@@ -165,3 +165,36 @@ class TestConverterFunc(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             extract_markdown_links(no_link)
+
+    def test_split_nodes_image(self):
+        text1 = TextNode("Here is another ![test image](https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT)
+        text2 = TextNode("![image here](https://www.imagecool.com/xtryfy/testi.img) this is a test ![number two here](https://www.imagecool.com/xtryfy/ffffffsti.img)", TextType.TEXT)
+        text3 = TextNode("Here is another ![test image](https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg)![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT)
+        no_url = TextNode("Here is another ![test image]() and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT)
+        no_alt = TextNode("No image text here ![](https://i.imgur.com/fJRm4Vk.jpeg)", TextType.TEXT)
+
+        text1_test = split_nodes_image([text1])
+        text2_test = split_nodes_image([text2])
+        text3_test = split_nodes_image([text3])
+        no_alt_test = split_nodes_image([no_alt])
+
+        self.assertEqual([TextNode("Here is another ", TextType.TEXT),
+                                      TextNode("test image", TextType.IMAGE, "https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg"),
+                                      TextNode(" and ", TextType.TEXT),
+                                      TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg")],
+                                      text1_test)
+        self.assertEqual([TextNode("image here", TextType.IMAGE, "https://www.imagecool.com/xtryfy/testi.img"),
+                          TextNode(" this is a test ", TextType.TEXT),
+                          TextNode("number two here", TextType.IMAGE, "https://www.imagecool.com/xtryfy/ffffffsti.img")],
+                          text2_test)
+        self.assertEqual([TextNode("Here is another ", TextType.TEXT), 
+                          TextNode("test image", TextType.IMAGE, "https://www.pixelstalk.net/wp-content/uploads/2016/06/South-Park-Wallpapers-HD-Pictures.jpg"),
+                          TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg")],
+                          text3_test)
+        self.assertEqual([TextNode("No image text here ", TextType.TEXT), 
+                          TextNode("", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg")],
+                          no_alt_test)
+        
+        with self.assertRaises(ValueError):
+            split_nodes_image([no_url])
+                          

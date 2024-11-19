@@ -64,28 +64,32 @@ def split_nodes_image(old_nodes):
     for old_node in old_nodes:
         if old_node.text.isspace() or old_node.text == "":
             continue
-        if old_node.find("![") == -1:
+        if old_node.text.find("![") == -1:
             raise ValueError(f"missing image markdown: {old_node}")
         extracted_images = extract_markdown_images(old_node.text)
         new_nodes.extend(recursive_image(old_node.text, extracted_images))
             
     return new_nodes
     
-def recursive_image(text, extracted_images, split_node=[]):
+def recursive_image(text, extracted_images, split_node=None):
+    if split_node is None:
+        split_node = []
     
-    if len(extracted_images) < 1:
+    if len(extracted_images) == 0:
         if len(text) < 1 or text.isspace():
             return split_node
         split_node.extend([TextNode(text, TextType.TEXT)])
         return split_node
     
     images = extracted_images.pop(0)
-    text_slice = text.split(f"![{images[0]}]({images[1]})")
+    text_slice = text.split(f"![{images[0]}]({images[1]})", 1)
     
-    if text.startswith("!["):
-        split_node.extend([TextNode(images[0], TextType.IMAGE, images[1])])
-    else:
-        split_node.extend([TextNode(text_slice[0], TextType.TEXT), TextNode(images[0], TextType.IMAGE, images[1])])
+    # Handle text before the image
+    if text_slice[0]:
+        split_node.append(TextNode(text_slice[0], TextType.TEXT))
+
+    # Add the image node
+    split_node.append(TextNode(images[0], TextType.IMAGE, images[1]))
 
     return recursive_image(text_slice[1], extracted_images, split_node)
         
@@ -101,7 +105,9 @@ def split_nodes_link(old_nodes):
         new_nodes.extend(recursive_link(old_node.text, extracted_links))
     return new_nodes
     
-def recursive_link(text, extracted_links, split_node=[]):
+def recursive_link(text, extracted_links, split_node=None):
+    if split_node is None:
+        split_node = []
     
     if len(extracted_links) < 1:
         if len(text) < 1 or text.isspace():
@@ -110,11 +116,13 @@ def recursive_link(text, extracted_links, split_node=[]):
         return split_node
     
     links = extracted_links.pop(0)
-    text_slice = text.split(f"![{links[0]}]({links[1]})")
+    text_slice = text.split(f"![{links[0]}]({links[1]})", 1)
     
-    if text.startswith("!["):
-        split_node.extend([TextNode(links[0], TextType.LINK, links[1])])
-    else:
-        split_node.extend([TextNode(text_slice[0], TextType.TEXT), TextNode(links[0], TextType.LINK, links[1])])
+    # Handle text before the link
+    if text_slice[0]:
+        split_node.append(TextNode(text_slice[0], TextType.TEXT))
 
-    return recursive_image(text_slice[1], extracted_links, split_node)
+    # Add the link node
+    split_node.append(TextNode(links[0], TextType.IMAGE, links[1]))
+
+    return recursive_link(text_slice[1], extracted_links, split_node)
