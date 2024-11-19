@@ -99,7 +99,7 @@ def split_nodes_link(old_nodes):
     for old_node in old_nodes:
         if old_node.text.isspace() or old_node.text == "":
             continue
-        if old_node.find("[") == -1:
+        if old_node.text.find("[") == -1:
             raise ValueError(f"missing link markdown: {old_node}")
         extracted_links = extract_markdown_links(old_node.text)
         new_nodes.extend(recursive_link(old_node.text, extracted_links))
@@ -116,13 +116,13 @@ def recursive_link(text, extracted_links, split_node=None):
         return split_node
     
     links = extracted_links.pop(0)
-    text_slice = text.split(f"![{links[0]}]({links[1]})", 1)
+    text_slice = text.split(f"[{links[0]}]({links[1]})", 1)
     
     # Handle text before the link
     if text_slice[0]:
         split_node.append(TextNode(text_slice[0], TextType.TEXT))
 
     # Add the link node
-    split_node.append(TextNode(links[0], TextType.IMAGE, links[1]))
+    split_node.append(TextNode(links[0], TextType.LINK, links[1]))
 
     return recursive_link(text_slice[1], extracted_links, split_node)
