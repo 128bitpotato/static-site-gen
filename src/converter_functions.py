@@ -98,7 +98,7 @@ def split_nodes_link(old_nodes):
         if old_node.find("[") == -1:
             raise ValueError(f"missing link markdown: {old_node}")
         extracted_links = extract_markdown_links(old_node.text)
-        new_nodes.extend(recursive_link(old_node.text, extracted_images))
+        new_nodes.extend(recursive_link(old_node.text, extracted_links))
     return new_nodes
     
 def recursive_link(text, extracted_links, split_node=[]):
