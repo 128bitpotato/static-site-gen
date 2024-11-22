@@ -232,8 +232,10 @@ class TestConverterFunc(unittest.TestCase):
 
     def test_text_to_textnodes(self):
         text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        dual_format = "This is a **bold text with a *italic text* within it**, cool huh?"
 
         text_test = text_to_textnodes(text)
+        test_dual_format = text_to_textnodes(dual_format)
 
         self.assertEqual(text_test, [
             TextNode("This is ", TextType.TEXT),
@@ -247,5 +249,10 @@ class TestConverterFunc(unittest.TestCase):
             TextNode(" and a ", TextType.TEXT),
             TextNode("link", TextType.LINK, "https://boot.dev"),
             ])
+        self.assertEqual([
+            TextNode("This is a ", TextType.TEXT, None),
+            TextNode("bold text with a *italic text* within it", TextType.BOLD, None), 
+            TextNode(", cool huh?", TextType.TEXT, None)],
+            test_dual_format)
 
                           

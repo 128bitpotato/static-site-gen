@@ -63,12 +63,13 @@ def split_nodes_image(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
         if old_node.text_type != TextType.TEXT:
-            new_nodes.extend(old_node)
+            new_nodes.append(old_node)
             continue
         if old_node.text.isspace() or old_node.text == "":
             continue
         if old_node.text.find("![") == -1:
-            raise ValueError(f"missing image markdown: {old_node}")
+            new_nodes.append(old_node)
+            continue
         extracted_images = extract_markdown_images(old_node.text)
         new_nodes.extend(recursive_image(old_node.text, extracted_images))
             
@@ -101,12 +102,13 @@ def split_nodes_link(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
         if old_node.text_type != TextType.TEXT:
-            new_nodes.extend(old_node)
+            new_nodes.append(old_node)
             continue
         if old_node.text.isspace() or old_node.text == "":
             continue
         if old_node.text.find("[") == -1:
-            raise ValueError(f"missing link markdown: {old_node}")
+            new_nodes.append(old_node)
+            continue
         extracted_links = extract_markdown_links(old_node.text)
         new_nodes.extend(recursive_link(old_node.text, extracted_links))
     return new_nodes
@@ -147,8 +149,6 @@ def text_to_textnodes(text):
         )
     
     # Links and images
-    list_of_nodes.extend(split_nodes_link(
-        split_nodes_image(list_of_nodes))
-        )
+    list_of_nodes = split_nodes_link(split_nodes_image(list_of_nodes))
     
     return list_of_nodes
