@@ -138,7 +138,7 @@ def text_to_textnodes(text):
     initial_node = TextNode(text, TextType.TEXT)
 
     # Text formats
-    list_of_nodes.expand(split_nodes_delimiter(
+    list_of_nodes.extend(split_nodes_delimiter(
         split_nodes_delimiter(
             split_nodes_delimiter([initial_node], 
         "**", TextType.BOLD), 
@@ -147,7 +147,7 @@ def text_to_textnodes(text):
         )
     
     # Links and images
-    list_of_nodes.expand(split_nodes_link(
+    list_of_nodes.extend(split_nodes_link(
         split_nodes_image(list_of_nodes))
         )
     
