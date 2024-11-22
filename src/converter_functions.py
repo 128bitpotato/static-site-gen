@@ -126,3 +126,23 @@ def recursive_link(text, extracted_links, split_node=None):
     split_node.append(TextNode(links[0], TextType.LINK, links[1]))
 
     return recursive_link(text_slice[1], extracted_links, split_node)
+
+def text_to_textnodes(text):
+    list_of_nodes = []
+    initial_node = TextNode(text, TextType.TEXT)
+
+    # Text formats
+    list_of_nodes.expand(split_nodes_delimiter(
+        split_nodes_delimiter(
+            split_nodes_delimiter([initial_node], 
+        "**", TextType.BOLD), 
+        "*", TextType.ITALIC), 
+        "`", TextType.CODE)
+        )
+    
+    # Links and images
+    list_of_nodes.expand(split_nodes_link(
+        split_nodes_image(list_of_nodes))
+        )
+    
+    return list_of_nodes
