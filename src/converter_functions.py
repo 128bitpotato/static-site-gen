@@ -62,6 +62,9 @@ def extract_markdown_links(text):
 def split_nodes_image(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.extend(old_node)
+            continue
         if old_node.text.isspace() or old_node.text == "":
             continue
         if old_node.text.find("![") == -1:
@@ -97,6 +100,9 @@ def recursive_image(text, extracted_images, split_node=None):
 def split_nodes_link(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.extend(old_node)
+            continue
         if old_node.text.isspace() or old_node.text == "":
             continue
         if old_node.text.find("[") == -1:
