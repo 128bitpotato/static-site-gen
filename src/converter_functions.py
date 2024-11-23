@@ -2,7 +2,8 @@ import re
 from textnode import *
 
 delimiters = {"**": TextType.BOLD,
-              "*": TextType.ITALIC}
+              "*": TextType.ITALIC,
+              "`": TextType.CODE}
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     list_of_nodes = []
@@ -136,17 +137,11 @@ def recursive_link(text, extracted_links, split_node=None):
     return recursive_link(text_slice[1], extracted_links, split_node)
 
 def text_to_textnodes(text):
-    list_of_nodes = []
-    initial_node = TextNode(text, TextType.TEXT)
+    list_of_nodes = [TextNode(text, TextType.TEXT)]
 
     # Text formats
-    list_of_nodes.extend(split_nodes_delimiter(
-        split_nodes_delimiter(
-            split_nodes_delimiter([initial_node], 
-        "**", TextType.BOLD), 
-        "*", TextType.ITALIC), 
-        "`", TextType.CODE)
-        )
+    for delimiter, texttype in delimiters.items():
+        list_of_nodes = split_nodes_delimiter(list_of_nodes, delimiter, texttype)
     
     # Links and images
     list_of_nodes = split_nodes_link(split_nodes_image(list_of_nodes))
