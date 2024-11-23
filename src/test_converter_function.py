@@ -232,9 +232,14 @@ class TestConverterFunc(unittest.TestCase):
 
     def test_text_to_textnodes(self):
         text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        text2 = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)[link](https://boot.dev)"
+        many_same = "This is **text** with an *italic* word and a `code block`. Then more **bold text that is pretty long** and **bold** and **bold**. More `code here` and `here` and `here`."
         dual_format = "This is a **bold text with a *italic text* within it**, cool huh?"
+        unclosed_delimiter = "This is **text** with an *italic* word and a `code block and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
 
         text_test = text_to_textnodes(text)
+        text2_test = text_to_textnodes(text2)
+        many_same_test = text_to_textnodes(many_same)
         test_dual_format = text_to_textnodes(dual_format)
 
         self.assertEqual(text_test, [
@@ -249,10 +254,48 @@ class TestConverterFunc(unittest.TestCase):
             TextNode(" and a ", TextType.TEXT),
             TextNode("link", TextType.LINK, "https://boot.dev"),
             ])
+        self.assertEqual(text2_test, [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+            ])
+        self.assertEqual(many_same_test, [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(". Then more ", TextType.TEXT),
+            TextNode("bold text that is pretty long", TextType.BOLD),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(". More ", TextType.TEXT),
+            TextNode("code here", TextType.CODE),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("here", TextType.CODE),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("here", TextType.CODE),
+            TextNode(".", TextType.TEXT),
+            ])
         self.assertEqual([
             TextNode("This is a ", TextType.TEXT, None),
             TextNode("bold text with a *italic text* within it", TextType.BOLD, None), 
             TextNode(", cool huh?", TextType.TEXT, None)],
             test_dual_format)
+        
+        with self.assertRaises(ValueError):
+            text_to_textnodes(unclosed_delimiter)
 
-                          
+if __name__ == "__main__":
+    unittest.main
