@@ -36,19 +36,28 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
         
         
     def test_block_to_block_type(self):
-        block1 = """```
+        code_block1 = """```
 this is a code block with code in it
 ```"""
-        missing_end = """```
+        code_missing_end = """```
 This is a code block with code in it
 """
+        heading1_block = "# Heading 1"
+        heading3_block = "### Heading 3"
+        heading6_block = "###### Heading 6"
 
-        block1_test = block_to_block_type(block1)
+        code_block1_test = block_to_block_type(code_block1)
+        heading1_block_test = block_to_block_type(heading1_block)
+        heading3_block_test = block_to_block_type(heading3_block)
+        heading6_block_test = block_to_block_type(heading6_block)
 
-        self.assertEqual(block1_test, "code")
+        self.assertEqual(code_block1_test, "code")
+        self.assertEqual(heading1_block_test, "heading")
+        self.assertEqual(heading3_block_test, "heading")
+        self.assertEqual(heading6_block_test, "heading")
 
         with self.assertRaises(ValueError):
-            block_to_block_type(missing_end)
+            block_to_block_type(code_missing_end)
 
 
 
