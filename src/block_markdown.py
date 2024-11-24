@@ -21,11 +21,15 @@ def block_to_block_type(block):
     #Code block
     if block.startswith("```"):
         if not block.endswith("```"):
-            raise ValueError(f'code blocks needs to end with "```": {block}')
+            raise ValueError(f'unclosed code block. code blocks needs to end with "```": {block}')
         return "code"
     
     # Quote block
-
+    if block.startswith(">"):
+        if re.match(r"^(> .*)?$|^(>)$", block, re.M):
+            return "quote"
+        else:
+            raise ValueError(f"Missing > in block quote, all lines need to start with >: {block}")
 
     # Unordered list
 
