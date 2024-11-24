@@ -1,6 +1,6 @@
 import unittest
 
-from block_markdown import markdown_to_blocks
+from block_markdown import markdown_to_blocks, block_to_block_type
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -33,8 +33,22 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
                           'This is a paragraph of text. It has some **bold** and *italic* words inside of it.', 
                           '* This is the first list item in a list block\n* This is a list item\n* This is another list item'],
                           test_empty_spaces)
+        
+        
+    def test_block_to_block_type(self):
+        block1 = """```
+this is a code block with code in it
+```"""
+        missing_end = """```
+This is a code block with code in it
+"""
 
+        block1_test = block_to_block_type(block1)
 
+        self.assertEqual(block1_test, "code")
+
+        with self.assertRaises(ValueError):
+            block_to_block_type(missing_end)
 
 
 
