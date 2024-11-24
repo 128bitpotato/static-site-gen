@@ -46,18 +46,38 @@ This is a code block with code in it
         heading3_block = "### Heading 3"
         heading6_block = "###### Heading 6"
 
+        quote_block = "> this is a quote"
+        quote_block_multi = """> This is a quote
+> in multiple lines
+> that should work
+>
+> and that is all."""
+        quote_block_multi_error = """> this quote
+>
+> shouldnt work
+because its wrong
+>"""
+
         code_block1_test = block_to_block_type(code_block1)
         heading1_block_test = block_to_block_type(heading1_block)
         heading3_block_test = block_to_block_type(heading3_block)
         heading6_block_test = block_to_block_type(heading6_block)
 
+        quote_block_test = block_to_block_type(quote_block)
+        quote_block_multi_test = block_to_block_type(quote_block_multi)
+
         self.assertEqual(code_block1_test, "code")
+
         self.assertEqual(heading1_block_test, "heading")
         self.assertEqual(heading3_block_test, "heading")
         self.assertEqual(heading6_block_test, "heading")
 
+        self.assertEqual(quote_block_test, "quote")
+        self.assertEqual(quote_block_multi_test, "quote")
+
         with self.assertRaises(ValueError):
             block_to_block_type(code_missing_end)
+            block_to_block_type(quote_block_multi_error)
 
 
 
