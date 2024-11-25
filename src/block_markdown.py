@@ -40,4 +40,8 @@ def block_to_block_type(block):
 
 
     # Ordered list
-        
+    if re.match(r"^(\d\.\s.*)?$", block.splitlines()[0]):
+        for num, line in enumerate(block.splitlines(), start=1):
+            if not re.match(rf"^({num}\.\s.*)?$", line):
+                raise ValueError(f'Invalid ordered list syntax: {block}')
+            return "ordered_list"

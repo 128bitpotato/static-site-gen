@@ -74,6 +74,19 @@ because its wrong
 line three
 - line four"""
 
+        ordered_list1 = """1. object 1
+2. object 2
+3. object three
+4. object 4"""
+        ordered_list_error = """1. object 1
+3. object 2
+4. object three
+4. object 4"""
+        ordered_list_error2 = """3. object 1
+4. object 2
+5. object three
+6. object 4"""
+
         code_block1_test = block_to_block_type(code_block1)
         heading1_block_test = block_to_block_type(heading1_block)
         heading3_block_test = block_to_block_type(heading3_block)
@@ -85,8 +98,7 @@ line three
         unordered_list_test = block_to_block_type(unordered_list)
         unordered_list2_test = block_to_block_type(unordered_list2)
         unordered_list3_test = block_to_block_type(unordered_list3)
-        
-        print(f"PRINT: {unordered_list2_test}")
+        ordered_list1_test = block_to_block_type(ordered_list1)
 
         self.assertEqual(code_block1_test, "code")
 
@@ -101,10 +113,14 @@ line three
         self.assertEqual(unordered_list2_test, "unordered_list")
         self.assertEqual(unordered_list3_test, "unordered_list")
 
+        self.assertEqual(ordered_list1_test, "ordered_list")
+
         with self.assertRaises(ValueError):
             block_to_block_type(code_missing_end)
             block_to_block_type(quote_block_multi_error)
             block_to_block_type(unordered_list_error)
+            block_to_block_type(ordered_list_error)
+            block_to_block_type(ordered_list_error2)
 
 
 
