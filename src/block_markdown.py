@@ -14,6 +14,11 @@ def markdown_to_blocks(markdown):
     return split_blocks
 
 def block_to_block_type(block):
+
+    # Error handling
+    if block == "" or block.isspace():
+        raise ValueError(f"Empty block: ({block})")
+
     # Headings
     if re.match(r"(^#{1,6}\s)", block):
         return "heading"
@@ -45,3 +50,6 @@ def block_to_block_type(block):
             if not re.match(rf"^({num}\.\s.*)?$", line):
                 raise ValueError(f'Invalid ordered list syntax: {block}')
             return "ordered_list"
+    
+    # Paragraph
+    return "paragraph"
