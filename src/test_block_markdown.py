@@ -87,6 +87,15 @@ line three
 5. object three
 6. object 4"""
 
+        paragraph1 = "This is a paragraph"
+        paragraph2 = "This is a paragraph with **bold text** and *italic text*"
+        paragraph3 = "`this paragraph starts` with a code block"
+        paragraph_no_list = "-This isn't a list, its something else"
+        paragraph_no_list2 = "*I dont know why I use star here. Sorry..."
+
+        error_handling1 = ""
+        error_handling2 = "          "
+
         code_block1_test = block_to_block_type(code_block1)
         heading1_block_test = block_to_block_type(heading1_block)
         heading3_block_test = block_to_block_type(heading3_block)
@@ -99,6 +108,12 @@ line three
         unordered_list2_test = block_to_block_type(unordered_list2)
         unordered_list3_test = block_to_block_type(unordered_list3)
         ordered_list1_test = block_to_block_type(ordered_list1)
+
+        paragraph1_test = block_to_block_type(paragraph1)
+        paragraph2_test = block_to_block_type(paragraph2)
+        paragraph3_test = block_to_block_type(paragraph3)
+        paragraph_no_list_test = block_to_block_type(paragraph_no_list)
+        paragraph_no_list2_test = block_to_block_type(paragraph_no_list2)
 
         self.assertEqual(code_block1_test, "code")
 
@@ -115,12 +130,20 @@ line three
 
         self.assertEqual(ordered_list1_test, "ordered_list")
 
+        self.assertEqual(paragraph1_test, "paragraph")
+        self.assertEqual(paragraph2_test, "paragraph")
+        self.assertEqual(paragraph3_test, "paragraph")
+        self.assertEqual(paragraph_no_list_test, "paragraph")
+        self.assertEqual(paragraph_no_list2_test, "paragraph")
+
         with self.assertRaises(ValueError):
             block_to_block_type(code_missing_end)
             block_to_block_type(quote_block_multi_error)
             block_to_block_type(unordered_list_error)
             block_to_block_type(ordered_list_error)
             block_to_block_type(ordered_list_error2)
+            block_to_block_type(error_handling1)
+            block_to_block_type(error_handling2)
 
 
 
