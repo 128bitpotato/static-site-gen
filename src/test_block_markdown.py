@@ -57,6 +57,22 @@ This is a code block with code in it
 > shouldnt work
 because its wrong
 >"""
+        unordered_list = """* line one
+* line two
+* line three
+* line four"""
+        unordered_list2 = """- line one
+- line two
+- line three
+- line four"""
+        unordered_list3 = """- line one
+* line two
+- line three
+* line four"""
+        unordered_list_error = """- line one
+- line two
+line three
+- line four"""
 
         code_block1_test = block_to_block_type(code_block1)
         heading1_block_test = block_to_block_type(heading1_block)
@@ -65,6 +81,12 @@ because its wrong
 
         quote_block_test = block_to_block_type(quote_block)
         quote_block_multi_test = block_to_block_type(quote_block_multi)
+
+        unordered_list_test = block_to_block_type(unordered_list)
+        unordered_list2_test = block_to_block_type(unordered_list2)
+        unordered_list3_test = block_to_block_type(unordered_list3)
+        
+        print(f"PRINT: {unordered_list2_test}")
 
         self.assertEqual(code_block1_test, "code")
 
@@ -75,9 +97,14 @@ because its wrong
         self.assertEqual(quote_block_test, "quote")
         self.assertEqual(quote_block_multi_test, "quote")
 
+        self.assertEqual(unordered_list_test, "unordered_list")
+        self.assertEqual(unordered_list2_test, "unordered_list")
+        self.assertEqual(unordered_list3_test, "unordered_list")
+
         with self.assertRaises(ValueError):
             block_to_block_type(code_missing_end)
             block_to_block_type(quote_block_multi_error)
+            block_to_block_type(unordered_list_error)
 
 
 

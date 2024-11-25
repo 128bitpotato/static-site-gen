@@ -32,7 +32,7 @@ def block_to_block_type(block):
             raise ValueError(f"Missing > in block quote, all lines need to start with >: {block}")
 
     # Unordered list
-    if block.startswith("* " or "- "):
+    if block.startswith("* ") or block.startswith("- "):
         if re.match(r"^(\* .*|\- .*)?$", block, re.M):
             return "unordered_list"
         else:
