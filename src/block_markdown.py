@@ -1,12 +1,34 @@
 import re
 
+html_tags = {"quote": "blockquote",
+             "unordered_list": "ul",
+             "ordered_list": "ol",
+             "code": "code",
+             "heading": "h",
+             "paragraph": "p"}
+
 def markdown_to_html_node(markdown):
+    list_of_blocks = markdown_to_blocks(markdown)
+    for block in list_of_blocks:
+        block_type = block_to_block_type(block)
+
+def block_to_html_tag(block):
+    tag = html_tags[block_to_block_type(block)]
+    if tag == "code":
+        tag = "pre"
+    if tag == "h":
+        match = re.match(r"(^#{1,6})", block)
+        tag += str(len(match.group(1)))
+    return tag
+
+
+def text_to_children(text):
     pass
 
 def markdown_to_blocks(markdown):
     remove_space = "\n".join(list(
         map(lambda line: line.strip() if line.isspace() else line, 
-            markdown.split("\n")
+            markdown.splitlines()
             )))
 
     split_blocks = list(
