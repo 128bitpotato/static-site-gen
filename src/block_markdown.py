@@ -1,4 +1,5 @@
 import re
+from htmlnode import *
 
 html_tags = {"quote": "blockquote",
              "unordered_list": "ul",
@@ -8,9 +9,11 @@ html_tags = {"quote": "blockquote",
              "paragraph": "p"}
 
 def markdown_to_html_node(markdown):
+    new_block_nodes = []
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
+        new_block = HTMLNode(block_to_html_tag(block))
 
 def block_to_html_tag(block):
     tag = html_tags[block_to_block_type(block)]
