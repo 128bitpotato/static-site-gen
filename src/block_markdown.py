@@ -13,7 +13,7 @@ def markdown_to_html_node(markdown):
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
-        new_block = HTMLNode(block_to_html_tag(block))
+        new_block = HTMLNode(block_to_html_tag(block), )
 
 def block_to_html_tag(block):
     tag = html_tags[block_to_block_type(block)]
@@ -27,6 +27,24 @@ def block_to_html_tag(block):
 
 def text_to_children(text):
     pass
+    
+def remove_markdown_syntax(text, block_type):
+    if block_type == "heading":
+        return text.lstrip("#")
+    
+    if block_type == "quote":
+        return "\n".join(list(map(lambda line: line.lstrip(">"), text.splitlines())))
+    
+    if block_type == "code":
+        return "\n".join(list(map(lambda line: line.strip("```") if line == "```" else line, text.splitlines())))
+
+    if block_type == "unordered_list":
+        return "\n".join(list(map(lambda line: line.lstrip("*-").lstrip(), text.splitlines())))
+
+    if block_type == "ordered_list":
+        return "\n".join(list(map(lambda line: line.lstrip(int).lstrip(". "), text.splitlines())))
+
+# Block func below
 
 def markdown_to_blocks(markdown):
     remove_space = "\n".join(list(
