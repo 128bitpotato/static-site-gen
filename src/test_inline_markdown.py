@@ -298,4 +298,4 @@ class TestInlineMarkdown(unittest.TestCase):
             text_to_textnodes(unclosed_delimiter)
 
 if __name__ == "__main__":
-    unittest.main
+    unittest.main()

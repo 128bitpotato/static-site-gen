@@ -1,6 +1,8 @@
 import unittest
 
-from block_markdown import markdown_to_blocks, block_to_block_type, remove_markdown_syntax
+from htmlnode import *
+
+from block_markdown import markdown_to_blocks, block_to_block_type, remove_markdown_syntax, text_to_children
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -174,9 +176,6 @@ this is a code block with code in it
         unordered_list_test = remove_markdown_syntax(unordered_list, "unordered_list")
         ordered_list_test = remove_markdown_syntax(ordered_list, "ordered_list")
 
-        print("---PRINT---")
-        print(f"{quote_test}")
-
         self.assertEqual(quote_test, """This is a quote
 in multiple lines
 that should work
@@ -194,8 +193,25 @@ line four""")
 object 2
 object three
 object 4""")
+    
+    def test_childnode(self):
+        test1 = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
 
+        test1_test = text_to_children(test1)
 
+        print("---PRINT---")
+        print(f"{test1_test}")
+
+        self.assertEqual([LeafNode(None, "This is ", None), 
+                          LeafNode("b", "text", None), 
+                          LeafNode(None, " with an ", None), 
+                          LeafNode("i", "italic", None), 
+                          LeafNode(None, " word and a ", None), 
+                          LeafNode("code", "code block", None), 
+                          LeafNode(None, " and an ", None), 
+                          LeafNode("img", "", {'src': 'https://i.imgur.com/fJRm4Vk.jpeg', 'alt': 'obi wan image'}), 
+                          LeafNode(None, " and a ", None), LeafNode("a", "link", {'href': 'https://boot.dev'})]
+                          )
 
 if __name__ == "__main__":
-    unittest.main
+    unittest.main()

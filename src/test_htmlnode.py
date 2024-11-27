@@ -100,4 +100,4 @@ class TestTextNode(unittest.TestCase):
             no_tag.to_html()
 
 if __name__ == "__main__":
-    unittest.main
+    unittest.main()

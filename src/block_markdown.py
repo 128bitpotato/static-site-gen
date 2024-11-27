@@ -1,5 +1,7 @@
 import re
 from htmlnode import *
+from inline_markdown import text_to_textnodes
+from textnode import *
 
 html_tags = {"quote": "blockquote",
              "unordered_list": "ul",
@@ -13,7 +15,17 @@ def markdown_to_html_node(markdown):
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
+        if block_type in ("quote", "heading"):
+            pass
+        if block_type in ("unordered_list", "ordered_list"):
+            pass
+        if block_type == "code":
+            pass
+        else:
+            children = text_to_children(remove_markdown_syntax(block))
+
         new_block = HTMLNode(block_to_html_tag(block), )
+        pass
 
 def block_to_html_tag(block):
     tag = html_tags[block_to_block_type(block)]
@@ -26,7 +38,9 @@ def block_to_html_tag(block):
 
 
 def text_to_children(text):
-    pass
+    text_nodes = text_to_textnodes(text)
+    html_nodes = list(map(text_node_to_html_node, text_nodes))
+    return html_nodes
     
 def remove_markdown_syntax(text, block_type):
     if block_type == "heading":
