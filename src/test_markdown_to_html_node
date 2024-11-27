@@ -32,6 +32,8 @@ this is a code block with code in it
         unordered_list_test = remove_markdown_syntax(unordered_list, "unordered_list")
         ordered_list_test = remove_markdown_syntax(ordered_list, "ordered_list")
 
+        print("----PRINT TEST----")
+
         self.assertEqual(quote_test, """This is a quote
 in multiple lines
 that should work

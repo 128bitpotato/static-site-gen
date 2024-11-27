@@ -38,8 +38,8 @@ def block_to_html_tag(block):
 
 
 def text_to_children(text):
-    text_nodes = text_to_textnodes(text)
-    html_nodes = list(map(text_node_to_html_node, text_nodes))
+    html_nodes = list(map(text_node_to_html_node,   # convert text nodes to html nodes
+                          text_to_textnodes(text))) # Convert raw text to text nodes
     return html_nodes
     
 def remove_markdown_syntax(text, block_type):

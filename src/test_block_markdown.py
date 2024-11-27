@@ -200,9 +200,9 @@ object 4""")
         test1_test = text_to_children(test1)
 
         print("---PRINT---")
-        print(f"{test1_test}")
+        print(test1_test)
 
-        self.assertEqual([LeafNode(None, "This is ", None), 
+        self.assertListEqual([LeafNode(None, "This is ", None), 
                           LeafNode("b", "text", None), 
                           LeafNode(None, " with an ", None), 
                           LeafNode("i", "italic", None), 
@@ -210,8 +210,8 @@ object 4""")
                           LeafNode("code", "code block", None), 
                           LeafNode(None, " and an ", None), 
                           LeafNode("img", "", {'src': 'https://i.imgur.com/fJRm4Vk.jpeg', 'alt': 'obi wan image'}), 
-                          LeafNode(None, " and a ", None), LeafNode("a", "link", {'href': 'https://boot.dev'})]
-                          )
+                          LeafNode(None, " and a ", None), LeafNode("a", "link", {'href': 'https://boot.dev'})],
+                          test1_test)
 
 if __name__ == "__main__":
     unittest.main()
