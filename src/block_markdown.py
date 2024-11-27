@@ -30,19 +30,22 @@ def text_to_children(text):
     
 def remove_markdown_syntax(text, block_type):
     if block_type == "heading":
-        return text.lstrip("#")
+        return text.lstrip("# ")
     
     if block_type == "quote":
-        return "\n".join(list(map(lambda line: line.lstrip(">"), text.splitlines())))
+        return "\n".join(list(map(lambda line: line.lstrip("> "), text.splitlines())))
     
     if block_type == "code":
-        return "\n".join(list(map(lambda line: line.strip("```") if line == "```" else line, text.splitlines())))
+        split_lines = list(map(lambda line: line.strip("```") if line == "```" else line, text.splitlines()))
+        return "\n".join(split_lines[1:-1])
 
     if block_type == "unordered_list":
         return "\n".join(list(map(lambda line: line.lstrip("*-").lstrip(), text.splitlines())))
 
     if block_type == "ordered_list":
-        return "\n".join(list(map(lambda line: line.lstrip(int).lstrip(". "), text.splitlines())))
+        new_lines = text.splitlines()
+        return "\n".join(list(map(lambda line: line[3:], new_lines)))
+        
 
 # Block func below
 

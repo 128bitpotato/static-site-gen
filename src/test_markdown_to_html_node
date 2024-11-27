@@ -1,0 +1,58 @@
+import unittest
+
+from block_markdown import remove_markdown_syntax
+
+class TestMarkdownToHTML(unittest.TestCase):
+    def test_remove_markdown_syntax(self):
+        quote = """> This is a quote
+> in multiple lines
+> that should work
+>
+> and that is all."""
+        heading = "# Heading 1"
+        heading3 = "### Heading 3"
+        heading6 = "###### Heading 6"
+        code = """```
+this is a code block with code in it
+```"""
+        unordered_list = """* line one
+* line two
+* line three
+* line four"""
+        ordered_list = """1. object 1
+2. object 2
+3. object three
+4. object 4"""
+
+        quote_test = remove_markdown_syntax(quote, "quote")
+        heading_test = remove_markdown_syntax(heading, "heading")
+        heading3_test = remove_markdown_syntax(heading3, "heading")
+        heading6_test = remove_markdown_syntax(heading6, "heading")
+        code_test = remove_markdown_syntax(code, "code")
+        unordered_list_test = remove_markdown_syntax(unordered_list, "unordered_list")
+        ordered_list_test = remove_markdown_syntax(ordered_list, "ordered_list")
+
+        print("---PRINT---")
+        print(f"{quote_test}")
+
+        self.assertEqual(quote_test, """This is a quote
+in multiple lines
+that should work
+
+and that is all.""")
+        self.assertEqual(heading_test, "Heading 1")
+        self.assertEqual(heading3_test, "Heading 3")
+        self.assertEqual(heading6_test, "Heading 6")
+        self.assertEqual(code_test, "this is a code block with code in it")
+        self.assertEqual(unordered_list_test, """line one
+line two
+line three
+line four""")
+        self.assertEqual(ordered_list_test, """object 1
+object 2
+object three
+object 4""")
+
+if __name__ == "__main__":
+    unittest.main
+
