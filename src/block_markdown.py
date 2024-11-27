@@ -15,17 +15,21 @@ def markdown_to_html_node(markdown):
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
+        children = text_to_children(remove_markdown_syntax(block, block_type))
+
         if block_type in ("quote", "heading"):
-            pass
+            html_node = ParentNode(block_to_html_tag(block), children=children)
+
         if block_type in ("unordered_list", "ordered_list"):
-            pass
+            html_node = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
+
         if block_type == "code":
             pass
         else:
-            children = text_to_children(remove_markdown_syntax(block))
+            pass
 
-        new_block = HTMLNode(block_to_html_tag(block), )
-        pass
+        # new_block = HTMLNode(block_to_html_tag(block), )
+        return html_node
 
 def block_to_html_tag(block):
     tag = html_tags[block_to_block_type(block)]
@@ -41,6 +45,10 @@ def text_to_children(text):
     html_nodes = list(map(text_node_to_html_node,   # convert text nodes to html nodes
                           text_to_textnodes(text))) # Convert raw text to text nodes
     return html_nodes
+
+def list_node_splitter(child_nodes):
+    html_node = list(map(lambda node: node.tag = "li", child_nodes))
+    return html_node
     
 def remove_markdown_syntax(text, block_type):
     if block_type == "heading":

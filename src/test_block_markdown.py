@@ -2,7 +2,7 @@ import unittest
 
 from htmlnode import *
 
-from block_markdown import markdown_to_blocks, block_to_block_type, remove_markdown_syntax, text_to_children
+from block_markdown import markdown_to_blocks, block_to_block_type, remove_markdown_syntax, text_to_children, markdown_to_html_node
 
 class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -199,9 +199,6 @@ object 4""")
 
         test1_test = text_to_children(test1)
 
-        print("---PRINT---")
-        print(test1_test)
-
         self.assertListEqual([LeafNode(None, "This is ", None), 
                           LeafNode("b", "text", None), 
                           LeafNode(None, " with an ", None), 
@@ -212,6 +209,26 @@ object 4""")
                           LeafNode("img", "", {'src': 'https://i.imgur.com/fJRm4Vk.jpeg', 'alt': 'obi wan image'}), 
                           LeafNode(None, " and a ", None), LeafNode("a", "link", {'href': 'https://boot.dev'})],
                           test1_test)
+        
+    def test_markdown_to_html(self):
+        heading = "### Heading 3"
+        quote = """> This is a quote
+> in multiple lines
+> that should work
+>
+> and that is all."""
+        unordered_list = """* line one
+* line two
+* line three
+* line four"""
+
+        heading_test = markdown_to_html_node(heading)
+        quote_test = markdown_to_html_node(quote)
+        unordered_list_test = markdown_to_html_node(unordered_list)
+        
+
+        print("---PRINT---")
+        print(unordered_list_test)
 
 if __name__ == "__main__":
     unittest.main()
