@@ -12,25 +12,24 @@ html_tags = {"quote": "blockquote",
              "lines": "li"}
 
 def markdown_to_html_node(markdown):
-    new_block_nodes = []
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
         children = text_to_children(remove_markdown_syntax(block, block_type))
 
         if block_type in ("quote", "heading"):
-            html_node = ParentNode(block_to_html_tag(block), children=children)
+            html_nodes = ParentNode(block_to_html_tag(block), children=children)
 
         if block_type in ("unordered_list", "ordered_list"):
-            html_node = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
+            html_nodes = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
 
         if block_type == "code": 
-            html_node = ParentNode(block_to_html_tag(block), children=children)
+            html_nodes = ParentNode(block_to_html_tag(block), children=children)
         else:
-            pass
+            html_nodes = ParentNode(block_to_html_tag(block), children=children)
+    return ParentNode("div", html_nodes)
 
-        # new_block = HTMLNode(block_to_html_tag(block), )
-        return html_node
+        
 
 def block_to_html_tag(block):
     tag = html_tags[block_to_block_type(block)]
