@@ -27,7 +27,7 @@ def markdown_to_html_node(markdown):
         if block_type == "code": # issue most likely in text_to_textnode not splitting correctly
             print(f"REMOVE MARKDOWN: {remove_markdown_syntax(block, block_type)}")
             test_text = remove_markdown_syntax(block, block_type)
-            print(f"CHILDREN: {text_to_children(test_text)}")
+            print(f"CHILDREN: {text_to_textnodes(test_text)}")
             html_node = ParentNode(block_to_html_tag(block), children=children)
         else:
             pass
@@ -65,8 +65,8 @@ def remove_markdown_syntax(text, block_type):
         return "\n".join(list(map(lambda line: line.lstrip("> "), text.splitlines())))
     
     if block_type == "code":
-        split_lines = list(map(lambda line: line.strip("```") if line == "```" else "`" + line + "`", text.splitlines()))
-        return "\n".join(split_lines[1:-1])
+        split_lines = list(map(lambda line: line.strip("```") if line == "```" else line, text.splitlines()))
+        return "`" + "\n".join(split_lines[1:-1]) + "`"
 
     if block_type == "unordered_list":
         return "\n".join(list(map(lambda line: line.lstrip("*-").lstrip(), text.splitlines())))
