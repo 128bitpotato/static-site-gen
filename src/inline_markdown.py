@@ -15,9 +15,15 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             list_of_nodes.append(node)
             continue
 
-        sections = node.text.split(delimiter)
-        if len(sections) % 2 == 0:
+        split_text = node.text.split(delimiter)
+        sections = []
+        if len(split_text) % 2 == 0:
             raise ValueError("delimiter not closed, invalid number of sections")
+        for section in range(len(split_text)):
+            if split_text[section] == "":
+                continue
+            else:
+                sections.append(split_text[section])
 
         starting_type = text_type if node.text.startswith(delimiter) else node.text_type
         type_dict = {"start": starting_type, "other": text_type if starting_type != text_type else node.text_type}

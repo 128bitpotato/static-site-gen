@@ -24,10 +24,7 @@ def markdown_to_html_node(markdown):
         if block_type in ("unordered_list", "ordered_list"):
             html_node = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
 
-        if block_type == "code": # issue most likely in text_to_textnode not splitting correctly
-            print(f"REMOVE MARKDOWN: {remove_markdown_syntax(block, block_type)}")
-            test_text = remove_markdown_syntax(block, block_type)
-            print(f"CHILDREN: {text_to_textnodes(test_text)}")
+        if block_type == "code": 
             html_node = ParentNode(block_to_html_tag(block), children=children)
         else:
             pass

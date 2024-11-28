@@ -184,7 +184,7 @@ and that is all.""")
         self.assertEqual(heading_test, "Heading 1")
         self.assertEqual(heading3_test, "Heading 3")
         self.assertEqual(heading6_test, "Heading 6")
-        self.assertEqual(code_test, "this is a code block with code in it")
+        self.assertEqual(code_test, "`this is a code block with code in it`")
         self.assertEqual(unordered_list_test, """line one
 line two
 line three
@@ -232,9 +232,7 @@ and more over here
         unordered_list_test = markdown_to_html_node(unordered_list)
         code_test = markdown_to_html_node(code)
         
-
-        print("---PRINT---")
-        print(code_test)
+        self.assertListEqual(heading_test,)
 
 if __name__ == "__main__":
     unittest.main()
