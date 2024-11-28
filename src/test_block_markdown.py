@@ -221,14 +221,20 @@ object 4""")
 * line two
 * line three
 * line four"""
+        code = """```
+this is a code block with code in it
+and here it is as well
+and more over here
+```"""
 
         heading_test = markdown_to_html_node(heading)
         quote_test = markdown_to_html_node(quote)
         unordered_list_test = markdown_to_html_node(unordered_list)
+        code_test = markdown_to_html_node(code)
         
 
         print("---PRINT---")
-        print(unordered_list_test)
+        print(code_test)
 
 if __name__ == "__main__":
     unittest.main()

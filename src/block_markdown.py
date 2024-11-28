@@ -8,7 +8,8 @@ html_tags = {"quote": "blockquote",
              "ordered_list": "ol",
              "code": "code",
              "heading": "h",
-             "paragraph": "p"}
+             "paragraph": "p",
+             "lines": "li"}
 
 def markdown_to_html_node(markdown):
     new_block_nodes = []
@@ -23,8 +24,11 @@ def markdown_to_html_node(markdown):
         if block_type in ("unordered_list", "ordered_list"):
             html_node = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
 
-        if block_type == "code":
-            pass
+        if block_type == "code": # issue most likely in text_to_textnode not splitting correctly
+            print(f"REMOVE MARKDOWN: {remove_markdown_syntax(block, block_type)}")
+            test_text = remove_markdown_syntax(block, block_type)
+            print(f"CHILDREN: {text_to_children(test_text)}")
+            html_node = ParentNode(block_to_html_tag(block), children=children)
         else:
             pass
 
@@ -47,8 +51,11 @@ def text_to_children(text):
     return html_nodes
 
 def list_node_splitter(child_nodes):
-    html_node = list(map(lambda node: node.tag = "li", child_nodes))
-    return html_node
+    new_nodes = []
+    for node in child_nodes:
+        for line in node.value.splitlines():
+            new_nodes.append(LeafNode("li", line))
+    return new_nodes
     
 def remove_markdown_syntax(text, block_type):
     if block_type == "heading":
@@ -58,7 +65,7 @@ def remove_markdown_syntax(text, block_type):
         return "\n".join(list(map(lambda line: line.lstrip("> "), text.splitlines())))
     
     if block_type == "code":
-        split_lines = list(map(lambda line: line.strip("```") if line == "```" else line, text.splitlines()))
+        split_lines = list(map(lambda line: line.strip("```") if line == "```" else "`" + line + "`", text.splitlines()))
         return "\n".join(split_lines[1:-1])
 
     if block_type == "unordered_list":
