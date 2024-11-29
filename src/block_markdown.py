@@ -12,22 +12,26 @@ html_tags = {"quote": "blockquote",
              "lines": "li"}
 
 def markdown_to_html_node(markdown):
+    child_nodes = []
     list_of_blocks = markdown_to_blocks(markdown)
     for block in list_of_blocks:
         block_type = block_to_block_type(block)
         children = text_to_children(remove_markdown_syntax(block, block_type))
 
         if block_type in ("quote", "heading"):
-            html_nodes = ParentNode(block_to_html_tag(block), children=children)
+            child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
 
         if block_type in ("unordered_list", "ordered_list"):
-            html_nodes = ParentNode(block_to_html_tag(block), children=list_node_splitter(children))
+            child_nodes.append(ParentNode(block_to_html_tag(block), children=list_node_splitter(children)))
 
         if block_type == "code": 
-            html_nodes = ParentNode(block_to_html_tag(block), children=children)
-        else:
-            html_nodes = ParentNode(block_to_html_tag(block), children=children)
-    return ParentNode("div", html_nodes)
+            child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
+        # else:
+            # child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
+        
+        # print(f"PRINT NEW LINE: {child_nodes}")
+
+    return ParentNode("div", child_nodes)
 
         
 

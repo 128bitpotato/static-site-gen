@@ -231,8 +231,30 @@ and more over here
         quote_test = markdown_to_html_node(quote)
         unordered_list_test = markdown_to_html_node(unordered_list)
         code_test = markdown_to_html_node(code)
+
+        print("---PRINT---")
+        print(unordered_list_test)
         
-        self.assertListEqual(heading_test,)
+        self.assertEqual(heading_test, ParentNode("div", 
+                                                  [ParentNode("h3", 
+                                                              [LeafNode(None, "Heading 3")])]),
+                                                              )
+        self.assertEqual(quote_test, ParentNode("div", 
+                                                [ParentNode("blockquote", 
+                                                            [LeafNode(None, """This is a quote
+in multiple lines
+that should work
+
+and that is all.""")])])
+                                                            )
+        self.assertEqual(unordered_list_test, ParentNode("div", 
+                                                         [ParentNode("ul", [
+                                                             LeafNode("li", "line one"), 
+                                                             LeafNode("li", "line two"),
+                                                             LeafNode("li", "line three"),
+                                                             LeafNode("li", "line four")])])
+                                                             )
+        # self.assertEqual()
 
 if __name__ == "__main__":
     unittest.main()
