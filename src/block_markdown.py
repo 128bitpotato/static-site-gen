@@ -21,16 +21,14 @@ def markdown_to_html_node(markdown):
         if block_type in ("quote", "heading"):
             child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
 
-        if block_type in ("unordered_list", "ordered_list"):
+        elif block_type in ("unordered_list", "ordered_list"):
             child_nodes.append(ParentNode(block_to_html_tag(block), children=list_node_splitter(children)))
 
-        if block_type == "code": 
+        elif block_type == "code": 
             child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
-        # else:
-            # child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
+        else:
+            child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
         
-        # print(f"PRINT NEW LINE: {child_nodes}")
-
     return ParentNode("div", child_nodes)
 
         
@@ -74,6 +72,8 @@ def remove_markdown_syntax(text, block_type):
     if block_type == "ordered_list":
         new_lines = text.splitlines()
         return "\n".join(list(map(lambda line: line[3:], new_lines)))
+    
+    return text
         
 
 # Block func below

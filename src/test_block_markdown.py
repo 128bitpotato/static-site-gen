@@ -221,19 +221,25 @@ object 4""")
 * line two
 * line three
 * line four"""
+        ordered_list = """1. line one
+2. line two
+3. line three
+4. line four"""
         code = """```
 this is a code block with code in it
 and here it is as well
 and more over here
 ```"""
+        paragraph = "This is simple text with an *italic* word and a **bold** word. Lastly there's a `code block` and a ![picture](https://www.google.com/picture.gif) and then a [link](https://www.boot.dev/profile)"
+        all_syntax = heading + "\n\n" + quote + "\n\n" + unordered_list + "\n\n" + ordered_list + "\n\n" + code + "\n\n" + paragraph
 
         heading_test = markdown_to_html_node(heading)
         quote_test = markdown_to_html_node(quote)
         unordered_list_test = markdown_to_html_node(unordered_list)
+        ordered_list_test = markdown_to_html_node(ordered_list)
         code_test = markdown_to_html_node(code)
-
-        print("---PRINT---")
-        print(unordered_list_test)
+        paragraph_test = markdown_to_html_node(paragraph)
+        all_syntax_test = markdown_to_html_node(all_syntax)
         
         self.assertEqual(heading_test, ParentNode("div", 
                                                   [ParentNode("h3", 
@@ -254,7 +260,66 @@ and that is all.""")])])
                                                              LeafNode("li", "line three"),
                                                              LeafNode("li", "line four")])])
                                                              )
-        # self.assertEqual()
+        self.assertEqual(ordered_list_test, ParentNode("div", 
+                                                         [ParentNode("ol", [
+                                                             LeafNode("li", "line one"), 
+                                                             LeafNode("li", "line two"),
+                                                             LeafNode("li", "line three"),
+                                                             LeafNode("li", "line four")])])
+                                                             )
+        self.assertEqual(code_test, ParentNode("div", 
+                                               [ParentNode("pre", 
+                                                           [LeafNode("code", """this is a code block with code in it
+and here it is as well
+and more over here""")])]))
+        self.assertEqual(paragraph_test, ParentNode("div", 
+                                                    [ParentNode("p", [
+                                                        LeafNode(None, "This is simple text with an "),
+                                                        LeafNode("i", "italic"),
+                                                        LeafNode(None, " word and a "),
+                                                        LeafNode("b", "bold"),
+                                                        LeafNode(None, " word. Lastly there's a "),
+                                                        LeafNode("code", "code block"),
+                                                        LeafNode(None, " and a "),
+                                                        LeafNode("img", "", {"src": "https://www.google.com/picture.gif", 
+                                                                               "alt": "picture"}),
+                                                        LeafNode(None, " and then a "),
+                                                        LeafNode("a", "link", {"href": "https://www.boot.dev/profile"})])]))
+        self.assertEqual(all_syntax_test, ParentNode("div", [ParentNode("h3", 
+                                                              [LeafNode(None, "Heading 3")]),
+                                                              ParentNode("blockquote", 
+                                                                         [LeafNode(None, """This is a quote
+in multiple lines
+that should work
+
+and that is all.""")]),
+                                                            ParentNode("ul", [
+                                                                LeafNode("li", "line one"), 
+                                                                LeafNode("li", "line two"),
+                                                                LeafNode("li", "line three"),
+                                                                LeafNode("li", "line four")]),
+                                                            ParentNode("ol", [
+                                                             LeafNode("li", "line one"), 
+                                                             LeafNode("li", "line two"),
+                                                             LeafNode("li", "line three"),
+                                                             LeafNode("li", "line four")]),
+                                                             ParentNode("pre", 
+                                                           [LeafNode("code", """this is a code block with code in it
+and here it is as well
+and more over here""")]),
+                                                            ParentNode("p", [
+                                                                LeafNode(None, "This is simple text with an "),
+                                                                LeafNode("i", "italic"),
+                                                                LeafNode(None, " word and a "),
+                                                                LeafNode("b", "bold"),
+                                                                LeafNode(None, " word. Lastly there's a "),
+                                                                LeafNode("code", "code block"),
+                                                                LeafNode(None, " and a "),
+                                                                LeafNode("img", "", {"src": "https://www.google.com/picture.gif", 
+                                                                               "alt": "picture"}),
+                                                                LeafNode(None, " and then a "),
+                                                                LeafNode("a", "link", {"href": "https://www.boot.dev/profile"})])])
+                                                                )
 
 if __name__ == "__main__":
     unittest.main()
