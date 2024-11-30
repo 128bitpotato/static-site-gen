@@ -240,18 +240,19 @@ and more over here
         code_test = markdown_to_html_node(code)
         paragraph_test = markdown_to_html_node(paragraph)
         all_syntax_test = markdown_to_html_node(all_syntax)
+        all_syntax_html = all_syntax_test.to_html()
         
         self.assertEqual(heading_test, ParentNode("div", 
                                                   [ParentNode("h3", 
                                                               [LeafNode(None, "Heading 3")])]),
                                                               )
         self.assertEqual(quote_test, ParentNode("div", 
-                                                [ParentNode("blockquote", 
+                                                [ParentNode("blockquote", [ParentNode("p", 
                                                             [LeafNode(None, """This is a quote
 in multiple lines
 that should work
 
-and that is all.""")])])
+and that is all.""")])])])
                                                             )
         self.assertEqual(unordered_list_test, ParentNode("div", 
                                                          [ParentNode("ul", [
@@ -287,12 +288,12 @@ and more over here""")])]))
                                                         LeafNode("a", "link", {"href": "https://www.boot.dev/profile"})])]))
         self.assertEqual(all_syntax_test, ParentNode("div", [ParentNode("h3", 
                                                               [LeafNode(None, "Heading 3")]),
-                                                              ParentNode("blockquote", 
+                                                              ParentNode("blockquote", [ParentNode("p", 
                                                                          [LeafNode(None, """This is a quote
 in multiple lines
 that should work
 
-and that is all.""")]),
+and that is all.""")])]),
                                                             ParentNode("ul", [
                                                                 LeafNode("li", "line one"), 
                                                                 LeafNode("li", "line two"),
@@ -320,6 +321,13 @@ and more over here""")]),
                                                                 LeafNode(None, " and then a "),
                                                                 LeafNode("a", "link", {"href": "https://www.boot.dev/profile"})])])
                                                                 )
+        self.assertEqual(all_syntax_html, """<div><h3>Heading 3</h3><blockquote><p>This is a quote
+in multiple lines
+that should work
+
+and that is all.</p></blockquote><ul><li>line one</li><li>line two</li><li>line three</li><li>line four</li></ul><ol><li>line one</li><li>line two</li><li>line three</li><li>line four</li></ol><pre><code>this is a code block with code in it
+and here it is as well
+and more over here</code></pre><p>This is simple text with an <i>italic</i> word and a <b>bold</b> word. Lastly there's a <code>code block</code> and a <img src="https://www.google.com/picture.gif" alt="picture"></img> and then a <a href="https://www.boot.dev/profile">link</a></p></div>""")
 
 if __name__ == "__main__":
     unittest.main()

@@ -18,7 +18,10 @@ def markdown_to_html_node(markdown):
         block_type = block_to_block_type(block)
         children = text_to_children(remove_markdown_syntax(block, block_type))
 
-        if block_type in ("quote", "heading"):
+        if block_type == "quote":
+            child_nodes.append(ParentNode(block_to_html_tag(block), children=[ParentNode("p", children)]))
+
+        elif block_type == "heading":
             child_nodes.append(ParentNode(block_to_html_tag(block), children=children))
 
         elif block_type in ("unordered_list", "ordered_list"):
