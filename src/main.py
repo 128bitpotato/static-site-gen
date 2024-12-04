@@ -35,13 +35,6 @@ def main():
             return "/".join(path.split("/")[1:])
         return path
 
-
-            
-
-
-        # os.path.exists("static/")
-        # dir = os.listdir(path="static/")
-        # return False
     
     print(copy_content())
 
