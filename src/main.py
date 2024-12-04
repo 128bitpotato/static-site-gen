@@ -4,27 +4,36 @@ import shutil
 
 def main():
 
-    def copy_content(tree=None, current_dir=None):
+    def copy_content(current_dir=None):
 
-        # if os.listdir(path="public") != []:
-        #     if tree == None:
-        #         shutil.rmtree("public")
-        #         os.mkdir("public")
+        if current_dir == None:
+            if os.listdir(path="public") != []:
+                shutil.rmtree("public")
+                os.mkdir("public")
         
-        if tree is None:
-            tree = []
+        tree = []
 
         current_dir = "static" if current_dir == None else current_dir
         dir_content = os.listdir(path=current_dir)
+
+        destination_path = os.path.join("public", strip_static_path(current_dir))
+
         for i in dir_content:
             path = os.path.join(current_dir, i)
             if os.path.isfile(path):
+                shutil.copy(path, destination_path)
                 tree.append(i)
             elif os.path.isdir(path):
-                tree.extend([copy_content(tree=None, current_dir=path)])
+                destination_folder = os.path.join(destination_path, i)
+                os.mkdir(destination_folder)
+                tree.extend([copy_content(current_dir=path)])
 
         return tree
 
+    def strip_static_path(path):
+        if path.startswith("static"):
+            return "/".join(path.split("/")[1:])
+        return path
 
 
             
@@ -32,7 +41,7 @@ def main():
 
         # os.path.exists("static/")
         # dir = os.listdir(path="static/")
-        return False
+        # return False
     
     print(copy_content())
 
