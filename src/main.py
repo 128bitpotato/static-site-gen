@@ -1,6 +1,7 @@
 from textnode import *
 import os
 import shutil
+import re
 
 def main():
 
@@ -35,7 +36,15 @@ def main():
             return "/".join(path.split("/")[1:])
         return path
 
-    
+    def extract_title(markdown):
+        title = re.match(r"(^#{1}\s)(.*)$", markdown, re.M)
+        if len(title) >= 1:
+            return title.group(2)
+        raise Exception(f"Missing h1 header: {markdown}")
+
+
+
+
     print(copy_content())
 
 if __name__ == "__main__":
