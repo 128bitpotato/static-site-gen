@@ -26,13 +26,19 @@ def generate_page(from_path, template_path, dest_path):
     else:
         raise ValueError(f"missing or incorrect template path: {template_path}")
 
+    # Convert markdown to html
     html_node = markdown_to_html_node(md_file_content)
     html_string = html_node.to_html()
     title = extract_title(md_file_content)
-
     new_html_string = replace_tamplate_content(template, title, html_string)
-    # new_html_page = 
-    
+
+    # Create new html file
+    if not os.path.isdir(os.path.dirname(dest_path)):
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_path, "w") as new_html_page:
+        new_html_page.write(new_html_string)
+
+
 
 def replace_tamplate_content(template, title, content):
     replaced_content = template.replace("{{ Content }}", content).replace("{{ Title }}", title)
