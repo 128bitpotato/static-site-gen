@@ -2,11 +2,6 @@ import os
 import shutil
 
 def copy_content(current_dir=None):
-
-    if current_dir == None:
-        if os.listdir(path="public") != []:
-            shutil.rmtree("public")
-            os.mkdir("public")
         
     tree = []
 
