@@ -37,8 +37,6 @@ def generate_page(from_path, template_path, dest_path):
     # Create new html file
     dest_file_name = destination_file_name(dest_path)
 
-    # if not os.path.isdir(os.path.dirname(dest_path)):
-        # os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_file_name, "w") as new_html_page:
         new_html_page.write(new_html_string)
 
