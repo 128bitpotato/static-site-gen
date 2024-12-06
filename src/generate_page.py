@@ -1,5 +1,6 @@
 import re
 import os
+import shutil
 
 from block_markdown import markdown_to_html_node
 
@@ -38,8 +39,29 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w") as new_html_page:
         new_html_page.write(new_html_string)
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    # Check every item in content folder
+    for i in dir_path_content:
+        path = os.path.join(dir_path_content, i)
+
+        # If item is file, generate html page
+        if os.path.isfile(path):
+            generate_page(path, template_path, dest_dir_path)
+
+        # If item is folder, recursive call for folder
+        elif os.path.isdir(path):
+            destination_folder = os.path.join(dest_dir_path, i)
+            if not os.path.isdir(destination_folder):
+                os.mkdir(destination_folder)
+            generate_pages_recursive(os.path.join(path, i), template_path, destination_folder)
+            
 
 
 def replace_tamplate_content(template, title, content):
     replaced_content = template.replace("{{ Content }}", content).replace("{{ Title }}", title)
     return replaced_content
+
+def strip_static_path(path):
+    if path.startswith("static"):
+        return "/".join(path.split("/")[1:])
+    return path
