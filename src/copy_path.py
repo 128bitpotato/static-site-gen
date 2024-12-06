@@ -3,7 +3,7 @@ import shutil
 
 def copy_content(current_dir=None):
         
-    tree = []
+    tree = [] # Only for debugging
 
     current_dir = "static" if current_dir == None else current_dir
     dir_content = os.listdir(path=current_dir)
