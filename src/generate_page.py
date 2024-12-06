@@ -29,33 +29,38 @@ def generate_page(from_path, template_path, dest_path):
 
     # Convert markdown to html
     html_node = markdown_to_html_node(md_file_content)
-    html_string = html_node.to_html()
+    content = html_node.to_html()
     title = extract_title(md_file_content)
-    new_html_string = replace_tamplate_content(template, title, html_string)
+    new_html_string = template.replace("{{ Content }}", content).replace("{{ Title }}", title)
+
 
     # Create new html file
-    if not os.path.isdir(os.path.dirname(dest_path)):
-        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    with open(dest_path, "w") as new_html_page:
+    dest_file_name = destination_file_name(dest_path)
+
+    # if not os.path.isdir(os.path.dirname(dest_path)):
+        # os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    with open(dest_file_name, "w") as new_html_page:
         new_html_page.write(new_html_string)
+
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     # Check every item in content folder
-    for i in dir_path_content:
+    for i in os.listdir(dir_path_content):
         path = os.path.join(dir_path_content, i)
 
         # If item is file, generate html page
         if os.path.isfile(path):
-            generate_page(path, template_path, dest_dir_path)
+            destination_file = os.path.join(dest_dir_path, i)
+            generate_page(path, template_path, destination_file)
 
         # If item is folder, recursive call for folder
         elif os.path.isdir(path):
             destination_folder = os.path.join(dest_dir_path, i)
             if not os.path.isdir(destination_folder):
                 os.mkdir(destination_folder)
-            generate_pages_recursive(os.path.join(path, i), template_path, destination_folder)
             
-
+            generate_pages_recursive(path, template_path, destination_folder)
+            
 
 def replace_tamplate_content(template, title, content):
     replaced_content = template.replace("{{ Content }}", content).replace("{{ Title }}", title)
@@ -65,3 +70,11 @@ def strip_static_path(path):
     if path.startswith("static"):
         return "/".join(path.split("/")[1:])
     return path
+
+def destination_file_name(dest_path):
+    dest_file_name = os.path.basename(dest_path)
+    split_name = dest_file_name.split(".")
+    html_file = split_name[0] + ".html"
+    dir_name = os.path.dirname(dest_path)
+    new_path = os.path.join(dir_name, html_file)
+    return new_path
